@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L'Évasion des Lettres</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Text:ital@0;1&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+:root{
+  --noir:#0a0807;--encre:#16120e;--bois:#241a0b;--bois2:#3a2712;
+  --cuir:#6b3a1f;--or:#c9a84c;--or2:#e8c56a;--or-pale:#e8d5a3;
+  --rouge:#8b1a1a;--vert:#2d4a2d;--texte:#e8d5a3;--blanc:#f0e8d5;
+  --act1:#1e2535;--act2:#1e2820;--act3:#2a1810;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;}
+body{background:var(--noir);color:var(--texte);font-family:'Crimson Text',serif;min-height:100vh;overflow-x:hidden;}
+#particles{position:fixed;inset:0;pointer-events:none;z-index:0;}
+.dust{position:absolute;border-radius:50%;opacity:0;animation:floatDust linear infinite;}
+@keyframes floatDust{0%{opacity:0;transform:translateY(100vh)}15%{opacity:.6}85%{opacity:.2}100%{opacity:0;transform:translateY(-5vh)}}
+.fade{position:fixed;inset:0;background:var(--noir);z-index:9999;pointer-events:none;opacity:0;transition:opacity .45s;}
+.fade.on{opacity:1;pointer-events:all;}
+.screen{display:none;position:relative;z-index:1;min-height:100vh;padding:28px 16px;flex-direction:column;align-items:center;}
+.screen.active{display:flex;}
+
+/* ===== INTRO ===== */
+#sc-intro{justify-content:center;text-align:center;background:
+  radial-gradient(ellipse at 30% 60%,rgba(107,58,31,.12),transparent 55%),
+  radial-gradient(ellipse at 70% 30%,rgba(139,26,26,.08),transparent 50%),var(--noir);}
+.candles{display:flex;gap:48px;margin-bottom:22px;justify-content:center;}
+.candle{display:flex;flex-direction:column;align-items:center;}
+.flame{width:11px;height:19px;background:linear-gradient(to top,#f60,#fc0,#fffde7);border-radius:50% 50% 30% 30%;animation:flk 1.6s ease-in-out infinite alternate;filter:drop-shadow(0 0 9px #f80);margin-bottom:-2px;}
+@keyframes flk{0%{transform:scaleX(1) rotate(-1deg);opacity:1}100%{transform:scaleX(1.1) scaleY(.95) rotate(2deg);opacity:.9}}
+.wick{width:2px;height:7px;background:#2a2010;margin-bottom:-2px;}
+.cbody{width:17px;height:58px;background:linear-gradient(to right,#c8b580,#f0ead5,#c0aa70);border-radius:2px 2px 1px 1px;}
+h1.hero{font-family:'Playfair Display',serif;font-size:clamp(2.6rem,6vw,5.2rem);color:var(--or);text-shadow:0 0 50px rgba(201,168,76,.35);line-height:1.1;margin-bottom:10px;}
+.hero-sub{font-family:'Special Elite',cursive;font-size:clamp(.82rem,2vw,1rem);color:var(--or-pale);letter-spacing:.32em;text-transform:uppercase;margin-bottom:24px;}
+.divhr{display:flex;align-items:center;gap:12px;margin:14px auto;max-width:360px;}
+.divhr::before,.divhr::after{content:'';flex:1;height:1px;background:linear-gradient(to right,transparent,var(--or),transparent);}
+.divhr span{color:var(--or);font-size:1.1rem;}
+.intro-txt{max-width:620px;font-size:1.1rem;line-height:1.92;color:var(--or-pale);margin-bottom:28px;font-style:italic;}
+.intro-stats{display:flex;gap:26px;justify-content:center;flex-wrap:wrap;margin-bottom:30px;}
+.stat .n{font-family:'Special Elite',cursive;font-size:1.65rem;color:var(--or);}
+.stat .l{font-size:.78rem;color:rgba(232,213,163,.4);letter-spacing:.1em;}
+.btn-or{font-family:'Special Elite',cursive;font-size:.88rem;letter-spacing:.2em;text-transform:uppercase;color:var(--noir);background:linear-gradient(135deg,var(--or),var(--or2),var(--or));border:none;padding:14px 42px;border-radius:2px;cursor:pointer;transition:all .3s;box-shadow:0 4px 22px rgba(201,168,76,.4);}
+.btn-or:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(201,168,76,.6);}
+.btn-ghost{font-family:'Special Elite',cursive;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(201,168,76,.5);background:none;border:1px dashed rgba(201,168,76,.2);padding:8px 18px;border-radius:2px;cursor:pointer;transition:all .25s;}
+.btn-ghost:hover{color:var(--or);border-color:rgba(201,168,76,.5);}
+
+/* ===== HUB ===== */
+#sc-hub{background:
+  radial-gradient(ellipse at 50% 0%,rgba(107,58,31,.2),transparent 50%),
+  linear-gradient(180deg,#0f0b07 0%,#1a1208 40%,#120e07 100%);}
+.hub-top{width:100%;max-width:960px;text-align:center;margin-bottom:28px;}
+.hub-title{font-family:'Playfair Display',serif;font-size:clamp(1.5rem,3.5vw,2.4rem);color:var(--or);text-shadow:0 0 30px rgba(201,168,76,.3);margin-bottom:6px;}
+.hub-sub{font-style:italic;color:rgba(232,213,163,.45);font-size:.96rem;}
+
+/* Score global */
+.hub-score{font-family:'Special Elite',cursive;font-size:.8rem;letter-spacing:.2em;color:rgba(201,168,76,.4);text-transform:uppercase;margin-top:6px;}
+.hub-score span{color:var(--or);}
+
+/* Mur de la bibliothèque */
+.library-wall{width:100%;max-width:960px;position:relative;}
+
+/* Plancher */
+.lib-floor{width:100%;height:18px;background:linear-gradient(to bottom,#2a1a08,#1a0f05);border-top:1px solid rgba(201,168,76,.1);margin-bottom:24px;border-radius:0 0 4px 4px;}
+
+/* Section d'acte */
+.act-section{width:100%;margin-bottom:32px;}
+.act-header{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
+.act-header-line{flex:1;height:1px;background:linear-gradient(to right,rgba(201,168,76,.15),rgba(201,168,76,.5),rgba(201,168,76,.15));}
+.act-tag{font-family:'Special Elite',cursive;font-size:.72rem;letter-spacing:.4em;color:var(--cuir);text-transform:uppercase;white-space:nowrap;padding:4px 14px;border:1px solid rgba(107,58,31,.5);border-radius:2px;}
+.act-name{font-family:'Playfair Display',serif;font-size:.95rem;color:rgba(232,213,163,.35);font-style:italic;white-space:nowrap;}
+
+/* Grille de portes */
+.doors-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;}
+
+/* Porte */
+.door-wrap{position:relative;cursor:pointer;}
+.door-frame{
+  background:linear-gradient(160deg,#3d250e,#2a1808,#3d250e);
+  border:2px solid #5a3518;
+  border-radius:3px;
+  padding:3px;
+  box-shadow:inset 0 0 12px rgba(0,0,0,.5), 0 4px 16px rgba(0,0,0,.5);
+  transition:all .3s;
+}
+.door-frame:hover{border-color:var(--or);box-shadow:inset 0 0 12px rgba(0,0,0,.5),0 4px 24px rgba(201,168,76,.25);}
+.door-frame.done{border-color:rgba(76,175,80,.5);background:linear-gradient(160deg,#1a3018,#122010,#1a3018);}
+.door-frame.done:hover{border-color:#4caf50;}
+.door-inner{
+  background:linear-gradient(170deg,#2a1808 0%,#1e1005 50%,#2a1808 100%);
+  border:1px solid rgba(201,168,76,.1);
+  border-radius:2px;
+  padding:16px 12px 14px;
+  min-height:130px;
+  display:flex;flex-direction:column;align-items:center;justify-content:space-between;
+  position:relative;overflow:hidden;
+  transition:all .3s;
+}
+.door-frame:hover .door-inner{background:linear-gradient(170deg,#321a0a,#251208,#321a0a);}
+.door-frame.done .door-inner{background:linear-gradient(170deg,#142010,#0e1808,#142010);}
+
+/* Panneau du haut de la porte */
+.door-inner::before{
+  content:'';position:absolute;top:8px;left:8px;right:8px;height:35px;
+  border:1px solid rgba(201,168,76,.08);border-radius:1px;
+}
+/* Panneau du bas */
+.door-inner::after{
+  content:'';position:absolute;bottom:8px;left:8px;right:8px;height:55px;
+  border:1px solid rgba(201,168,76,.08);border-radius:1px;
+}
+.door-num{font-family:'Special Elite',cursive;font-size:.7rem;letter-spacing:.3em;color:rgba(201,168,76,.35);text-transform:uppercase;z-index:1;}
+.door-icon{font-size:1.8rem;z-index:1;line-height:1;margin:4px 0;}
+.door-name{font-family:'Playfair Display',serif;font-size:.82rem;color:var(--or-pale);text-align:center;line-height:1.35;z-index:1;}
+.door-frame.done .door-name{color:rgba(165,214,167,.8);}
+
+/* Poignée */
+.door-handle{
+  position:absolute;right:8px;top:50%;transform:translateY(-50%);
+  width:7px;height:18px;
+  background:linear-gradient(to bottom,#b8960c,#8a6a08);
+  border-radius:3px;z-index:2;
+  box-shadow:0 0 4px rgba(0,0,0,.4);
+  transition:all .3s;
+}
+.door-frame:hover .door-handle{background:linear-gradient(to bottom,var(--or),#a87e10);box-shadow:0 0 8px rgba(201,168,76,.4);}
+.door-frame.done .door-handle{background:linear-gradient(to bottom,#4caf50,#388e3c);}
+
+/* Badge "fait" */
+.door-done-badge{
+  position:absolute;top:-8px;right:-8px;
+  width:22px;height:22px;border-radius:50%;
+  background:#4caf50;display:flex;align-items:center;justify-content:center;
+  font-size:.7rem;z-index:10;
+  box-shadow:0 0 8px rgba(76,175,80,.5);
+  display:none;
+}
+.door-frame.done + .door-done-badge,
+.door-wrap.done .door-done-badge{display:flex;}
+
+/* Flamme sur les côtés du hub */
+.wall-sconce{display:flex;flex-direction:column;align-items:center;opacity:.7;}
+.sconce-flame{width:8px;height:14px;background:linear-gradient(to top,#f60,#fc0);border-radius:50% 50% 30% 30%;animation:flk 1.4s ease-in-out infinite alternate;filter:drop-shadow(0 0 6px #f80);}
+.sconce-body{width:14px;height:6px;background:linear-gradient(to right,#8a6010,#c9a84c,#8a6010);border-radius:2px;}
+
+/* Coffre (Acte III) */
+.chest-wrap{cursor:pointer;}
+.chest-frame{
+  background:linear-gradient(160deg,#3d1e0a,#2a1205);
+  border:2px solid #5a2e10;
+  border-radius:3px 3px 4px 4px;
+  padding:3px;
+  box-shadow:0 4px 16px rgba(0,0,0,.6),inset 0 0 10px rgba(0,0,0,.4);
+  transition:all .3s;
+}
+.chest-frame:hover{border-color:var(--or);box-shadow:0 4px 24px rgba(201,168,76,.2),inset 0 0 10px rgba(0,0,0,.4);}
+.chest-frame.done{border-color:rgba(76,175,80,.5);}
+.chest-lid{
+  background:linear-gradient(to bottom,#4a2010,#321408);
+  border-radius:2px 2px 0 0;
+  height:28px;
+  border-bottom:1px solid rgba(201,168,76,.2);
+  position:relative;display:flex;align-items:center;justify-content:center;
+}
+.chest-clasp{width:14px;height:8px;background:linear-gradient(to bottom,#c9a84c,#8a6010);border-radius:6px;box-shadow:0 0 4px rgba(201,168,76,.3);}
+.chest-frame.done .chest-clasp{background:linear-gradient(to bottom,#4caf50,#388e3c);}
+.chest-body-inner{
+  background:linear-gradient(160deg,#2a1005,#1e0d03,#2a1005);
+  padding:12px 10px 12px;min-height:90px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  border-radius:0 0 2px 2px;
+}
+.chest-icon{font-size:1.5rem;}
+.chest-name{font-family:'Playfair Display',serif;font-size:.8rem;color:var(--or-pale);text-align:center;line-height:1.3;}
+.chest-frame.done .chest-name{color:rgba(165,214,167,.8);}
+.chest-num{font-family:'Special Elite',cursive;font-size:.65rem;letter-spacing:.25em;color:rgba(201,168,76,.3);}
+
+/* Bookshelf décoration */
+.bookshelf{width:100%;height:22px;background:linear-gradient(to bottom,#2a1808,#1e1005);border-bottom:2px solid rgba(201,168,76,.15);margin-bottom:12px;display:flex;gap:3px;padding:3px 8px;overflow:hidden;}
+.book{flex-shrink:0;border-radius:1px 1px 0 0;}
+
+/* Hub footer */
+.hub-footer{width:100%;max-width:960px;text-align:center;margin-top:16px;padding-top:16px;border-top:1px solid rgba(201,168,76,.08);}
+
+/* ===== SALLE (room) ===== */
+.room-screen{justify-content:flex-start;}
+.room-hdr{width:100%;max-width:900px;text-align:center;margin-bottom:18px;padding-top:6px;}
+.act-lbl{font-family:'Special Elite',cursive;font-size:.66rem;letter-spacing:.45em;color:var(--cuir);text-transform:uppercase;margin-bottom:5px;}
+.room-ttl{font-family:'Playfair Display',serif;font-size:clamp(1.45rem,3.2vw,2.2rem);color:var(--or);text-shadow:0 0 20px rgba(201,168,76,.3);margin-bottom:5px;}
+.room-stl{font-style:italic;color:rgba(232,213,163,.45);font-size:.95rem;}
+.btn-back{display:flex;align-items:center;gap:8px;font-family:'Special Elite',cursive;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(201,168,76,.45);background:none;border:1px solid rgba(201,168,76,.15);padding:8px 18px;border-radius:2px;cursor:pointer;transition:all .25s;margin-bottom:18px;align-self:flex-start;}
+.btn-back:hover{color:var(--or);border-color:rgba(201,168,76,.4);}
+
+/* Progress */
+.progbar{width:100%;max-width:680px;margin-bottom:20px;}
+.pb-segs{display:flex;gap:3px;}
+.pb-seg{flex:1;height:4px;border-radius:2px;background:rgba(201,168,76,.1);overflow:hidden;}
+.pb-fill{height:100%;background:linear-gradient(to right,var(--cuir),var(--or));transition:width .8s;}
+.pb-lbls{display:flex;justify-content:space-between;margin-top:4px;}
+.pb-lbl{font-family:'Special Elite',cursive;font-size:.58rem;letter-spacing:.12em;color:rgba(201,168,76,.22);}
+.pb-lbl.act{color:rgba(201,168,76,.7);}
+
+/* Card */
+.card{width:100%;max-width:880px;background:linear-gradient(150deg,var(--encre),var(--bois));border:1px solid rgba(201,168,76,.17);border-radius:4px;padding:32px;box-shadow:0 20px 60px rgba(0,0,0,.6);position:relative;overflow:hidden;margin-bottom:16px;max-height:78vh;overflow-y:auto;}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(to right,transparent,var(--or),transparent);}
+.ctx{font-size:1.06rem;line-height:1.85;color:var(--or-pale);margin-bottom:22px;font-style:italic;padding:15px 19px;background:rgba(0,0,0,.2);border-left:3px solid var(--or);border-radius:0 2px 2px 0;}
+.q-txt{font-family:'Playfair Display',serif;font-size:1.12rem;color:var(--blanc);margin-bottom:17px;line-height:1.5;}
+.q-sep{height:1px;background:linear-gradient(to right,transparent,rgba(201,168,76,.13),transparent);margin:20px 0;}
+
+/* Choix */
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px;}
+@media(max-width:560px){.choices{grid-template-columns:1fr;}}
+.cho{font-family:'Crimson Text',serif;font-size:1rem;color:var(--or-pale);background:rgba(0,0,0,.28);border:1px solid rgba(201,168,76,.16);padding:12px 16px;border-radius:3px;cursor:pointer;text-align:left;transition:all .2s;position:relative;overflow:hidden;}
+.cho::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--or);transform:scaleY(0);transition:transform .2s;}
+.cho:not([disabled]):hover{background:rgba(201,168,76,.07);border-color:rgba(201,168,76,.4);transform:translateX(3px);}
+.cho:not([disabled]):hover::before{transform:scaleY(1);}
+.cho:disabled{cursor:default;}
+.cho.ok{background:rgba(45,74,45,.4)!important;border-color:#4caf50!important;color:#a5d6a7!important;}
+.cho.ok::before{background:#4caf50;transform:scaleY(1);}
+.cho.bad{background:rgba(139,26,26,.28)!important;border-color:rgba(139,26,26,.5)!important;color:#ef9a9a!important;}
+.cho.bad::before{background:var(--rouge);transform:scaleY(1);}
+
+/* Association */
+.assoc-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+@media(max-width:540px){.assoc-wrap{grid-template-columns:1fr;}}
+.acol-hd{font-family:'Special Elite',cursive;font-size:.66rem;letter-spacing:.22em;color:var(--cuir);text-transform:uppercase;margin-bottom:7px;}
+.ai{font-family:'Crimson Text',serif;font-size:.96rem;color:var(--or-pale);background:rgba(0,0,0,.24);border:1px solid rgba(201,168,76,.13);padding:8px 12px;border-radius:3px;cursor:pointer;transition:all .18s;margin-bottom:6px;line-height:1.3;}
+.ai:hover{border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.06);}
+.ai.sel{border-color:var(--or);background:rgba(201,168,76,.12);color:var(--or);}
+.ai.ok{border-color:#4caf50!important;background:rgba(45,74,45,.2)!important;color:#a5d6a7!important;pointer-events:none;}
+.ai.bad{border-color:var(--rouge)!important;background:rgba(139,26,26,.18)!important;color:#ef9a9a!important;}
+
+/* Ordering */
+.ord-bank{display:flex;flex-direction:column;gap:7px;margin-bottom:14px;}
+.ord-item{font-family:'Crimson Text',serif;font-size:.98rem;color:var(--or-pale);background:rgba(0,0,0,.28);border:1px solid rgba(201,168,76,.17);padding:10px 15px;border-radius:3px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:10px;}
+.ord-item:not(.picked):hover{border-color:rgba(201,168,76,.45);background:rgba(201,168,76,.06);}
+.ord-item.picked{opacity:.32;pointer-events:none;}
+.ord-badge{width:25px;height:25px;border-radius:50%;border:1px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;font-family:'Special Elite',cursive;font-size:.78rem;color:rgba(201,168,76,.38);flex-shrink:0;transition:all .3s;}
+.ord-badge.ok{background:rgba(45,74,45,.5);color:#a5d6a7;border-color:#4caf50;}
+.ord-badge.bad{background:rgba(139,26,26,.4);color:#ef9a9a;border-color:#c62828;}
+
+/* Comparatif */
+.compar-cats{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;}
+.compar-cat{flex:1;min-width:120px;padding:11px;border-radius:3px;border:1px dashed rgba(201,168,76,.18);min-height:70px;cursor:pointer;transition:all .2s;}
+.compar-cat:hover,.compar-cat.active-cat{border-color:rgba(201,168,76,.5);background:rgba(201,168,76,.05);}
+.ccat-hd{font-family:'Special Elite',cursive;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:7px;}
+.ccat-zone{min-height:30px;display:flex;flex-wrap:wrap;gap:5px;}
+.compar-bank{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;}
+.citem{font-size:.9rem;color:var(--or-pale);background:rgba(107,58,31,.28);border:1px solid rgba(201,168,76,.2);padding:6px 12px;border-radius:3px;cursor:pointer;transition:all .18s;}
+.citem:not(.used):hover,.citem.sel{border-color:var(--or);background:rgba(201,168,76,.1);}
+.citem.used{opacity:.28;pointer-events:none;}
+.citem-placed{font-size:.86rem;padding:5px 9px;border-radius:3px;}
+.citem-placed.ok{background:rgba(45,74,45,.28);border:1px solid #4caf50;color:#a5d6a7;}
+.citem-placed.bad{background:rgba(139,26,26,.18);border:1px solid #c62828;color:#ef9a9a;}
+
+/* Feedback */
+.fb{padding:12px 16px;border-radius:3px;font-size:.96rem;line-height:1.6;margin-bottom:15px;display:none;}
+.fb.show{display:block;animation:fi .3s ease;}
+.fb.ok{background:rgba(45,74,45,.28);border:1px solid rgba(76,175,80,.38);color:#c8e6c9;}
+.fb.bad{background:rgba(139,26,26,.16);border:1px solid rgba(139,26,26,.38);color:#ffcdd2;}
+@keyframes fi{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
+.hbox{display:none;padding:11px 15px;background:rgba(107,58,31,.14);border:1px dashed rgba(201,168,76,.2);border-radius:3px;font-style:italic;color:rgba(232,213,163,.68);font-size:.92rem;margin-bottom:12px;}
+.hbox.show{display:block;animation:fi .3s;}
+.cfoot{display:flex;gap:9px;align-items:center;flex-wrap:wrap;}
+
+/* Code box */
+.codebox{text-align:center;padding:24px;background:rgba(0,0,0,.35);border:1px solid var(--or);border-radius:3px;margin-bottom:18px;animation:glw 2.5s ease-in-out infinite;}
+@keyframes glw{0%,100%{box-shadow:0 0 12px rgba(201,168,76,.18)}50%{box-shadow:0 0 28px rgba(201,168,76,.4)}}
+.code-lbl{font-family:'Special Elite',cursive;font-size:.66rem;letter-spacing:.4em;color:var(--cuir);text-transform:uppercase;margin-bottom:9px;}
+.code-dig{font-family:'Special Elite',cursive;font-size:2.5rem;color:var(--or);letter-spacing:.5em;text-shadow:0 0 20px rgba(201,168,76,.5);}
+.pnote{padding:10px 14px;background:rgba(26,37,53,.3);border:1px solid rgba(100,140,200,.15);border-radius:3px;font-size:.88rem;color:rgba(232,213,163,.58);margin-bottom:12px;}
+
+/* Victoire */
+#sc-vic{justify-content:center;text-align:center;background:radial-gradient(ellipse at 50% 40%,rgba(201,168,76,.06),transparent 70%),var(--noir);}
+.vic-ic{font-size:3.5rem;animation:bou 1s ease infinite alternate;margin-bottom:16px;}
+@keyframes bou{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.08) rotate(3deg)}}
+.vic-ttl{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.4rem);color:var(--or);text-shadow:0 0 40px rgba(201,168,76,.4);margin-bottom:10px;}
+.cert{max-width:560px;background:linear-gradient(145deg,var(--encre),var(--bois));border:2px solid var(--or);border-radius:4px;padding:30px;margin:20px auto;position:relative;}
+.cert-orn{position:absolute;color:var(--or);font-size:1.1rem;opacity:.38;}
+.cert-orn.tl{top:9px;left:15px;}.cert-orn.br{bottom:9px;right:15px;}
+.cert-ttl{font-family:'Playfair Display',serif;font-style:italic;font-size:1.35rem;color:var(--or);margin-bottom:10px;}
+.cert-txt{font-size:.98rem;line-height:1.8;color:var(--or-pale);margin-bottom:10px;}
+.cert-sc{font-family:'Special Elite',cursive;font-size:1.15rem;color:var(--or);}
+.rdg{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:16px 0;}
+.rdg-i{background:rgba(107,58,31,.28);border:1px solid rgba(201,168,76,.16);padding:8px 14px;border-radius:3px;font-size:.85rem;color:var(--or-pale);text-align:center;}
+.rdg-i small{display:block;color:rgba(232,213,163,.38);font-size:.72rem;margin-top:2px;}
+</style>
+</head>
+<body>
+
+<div class="fade" id="fade"></div>
+<div id="particles"></div>
+
+<!-- ===== INTRO ===== -->
+<div class="screen active" id="sc-intro">
+  <div class="candles">
+    <div class="candle"><div class="flame"></div><div class="wick"></div><div class="cbody"></div></div>
+    <div class="candle"><div class="flame" style="animation-delay:.35s"></div><div class="wick"></div><div class="cbody"></div></div>
+    <div class="candle"><div class="flame" style="animation-delay:.7s"></div><div class="wick"></div><div class="cbody"></div></div>
+  </div>
+  <div style="font-size:1.5rem;color:var(--or);letter-spacing:.5rem;margin-bottom:9px;">— ✦ —</div>
+  <h1 class="hero">L'Évasion<br>des Lettres</h1>
+  <p class="hero-sub">Jeu d'évasion · Littérature québécoise &amp; Roman</p>
+  <div class="divhr"><span>❧</span></div>
+  <p class="intro-txt">Vous êtes prisonnier·ère de la Bibliothèque des Ancêtres, gardienne des savoirs littéraires. Explorez librement les trois ailes de la bibliothèque. Derrière chaque porte et chaque coffre se cache une énigme sur le roman ou la littérature québécoise. Résolvez-les toutes pour conquérir votre liberté.</p>
+  <div class="intro-stats">
+    <div class="stat"><div class="n">3</div><div class="l">Actes</div></div>
+    <div class="stat"><div class="n">14</div><div class="l">Salles</div></div>
+    <div class="stat"><div class="n">~40</div><div class="l">Questions</div></div>
+    <div class="stat"><div class="n">60–75</div><div class="l">Minutes</div></div>
+  </div>
+  <button class="btn-or" onclick="goHub()">🚪 Entrer dans la Bibliothèque</button>
+</div>
+
+<!-- ===== HUB ===== -->
+<div class="screen" id="sc-hub">
+  <div class="hub-top">
+    <h2 class="hub-title">🏛 La Bibliothèque des Ancêtres</h2>
+    <p class="hub-sub">Choisissez une porte ou un coffre pour entrer dans une salle</p>
+    <p class="hub-score">Salles réussies : <span id="hub-done">0</span> / 14 &nbsp;·&nbsp; Score : <span id="hub-score">0</span> pts</p>
+  </div>
+
+  <div class="library-wall">
+
+    <!-- ACTE I : Le Roman -->
+    <div class="act-section">
+      <div class="act-header">
+        <div class="act-header-line"></div>
+        <span class="act-tag">Aile I</span>
+        <span class="act-name">Le Roman</span>
+        <div class="act-header-line"></div>
+      </div>
+      <div class="bookshelf" id="shelf1"></div>
+      <div class="doors-grid" id="doors-act1"></div>
+    </div>
+
+    <!-- ACTE II : Genres narratifs -->
+    <div class="act-section">
+      <div class="act-header">
+        <div class="act-header-line"></div>
+        <span class="act-tag">Aile II</span>
+        <span class="act-name">Les Genres Narratifs</span>
+        <div class="act-header-line"></div>
+      </div>
+      <div class="bookshelf" id="shelf2"></div>
+      <div class="doors-grid" id="doors-act2"></div>
+    </div>
+
+    <!-- ACTE III : Littérature québécoise (coffres) -->
+    <div class="act-section">
+      <div class="act-header">
+        <div class="act-header-line"></div>
+        <span class="act-tag">Aile III</span>
+        <span class="act-name">La Littérature Québécoise</span>
+        <div class="act-header-line"></div>
+      </div>
+      <div class="bookshelf" id="shelf3"></div>
+      <div class="doors-grid" id="doors-act3"></div>
+    </div>
+
+    <div class="lib-floor"></div>
+  </div>
+
+  <div class="hub-footer">
+    <button class="btn-ghost" onclick="goVic()" id="btn-finish" style="display:none">🔓 Franchir la Grande Porte</button>
+  </div>
+</div>
+
+<!-- ===== SALLES (1–14) ===== -->
+<!-- S1 -->
+<div class="screen room-screen" id="sc-s1">
+  <div class="room-hdr"><div class="act-lbl">Acte I · Salle 1</div><h2 class="room-ttl">📚 La Chambre des Définitions</h2><p class="room-stl">Qu'est-ce qu'un roman ?</p></div>
+  <div class="progbar" id="pb1"></div>
+  <button class="btn-back" onclick="goHub()">← Retour à la bibliothèque</button>
+  <div class="card">
+    <div class="ctx">Une vieille boîte verrouillée : <em>«&nbsp;Seul celui qui sait ce qu'est un roman peut l'ouvrir.&nbsp;»</em></div>
+    <div class="q-txt">1. Quelle définition décrit le mieux le roman ?</div>
+    <div class="choices" id="q1a">
+      <button class="cho" onclick="qcm(event,'q1a',false,'fb1','','q1b-w')">Un texte court en vers racontant une aventure fictive</button>
+      <button class="cho" onclick="qcm(event,'q1a',true,'fb1','✅ Exact ! Le roman est une œuvre en prose, fictionnelle, longue, construite autour de personnages et d\'une intrigue développée.','q1b-w')">Une œuvre en prose, fictionnelle, longue, avec personnages et intrigue développés</button>
+      <button class="cho" onclick="qcm(event,'q1a',false,'fb1','','q1b-w')">Un texte non fictionnel qui analyse la réalité sociale</button>
+      <button class="cho" onclick="qcm(event,'q1a',false,'fb1','','q1b-w')">Une pièce de théâtre sous forme de paragraphes</button>
+    </div>
+    <div id="q1b-w" style="display:none"><div class="q-sep"></div>
+      <div class="q-txt">2. Le roman se distingue de l'essai parce qu'il…</div>
+      <div class="choices" id="q1b">
+        <button class="cho" onclick="qcm(event,'q1b',false,'fb1','','q1c-w')">Contient des descriptions de lieux</button>
+        <button class="cho" onclick="qcm(event,'q1b',true,'fb1','✅ Parfait ! L\'essai expose des idées sur le monde réel ; le roman invente des personnages et événements fictifs.','q1c-w')">Invente des personnages et des événements fictifs</button>
+        <button class="cho" onclick="qcm(event,'q1b',false,'fb1','','q1c-w')">Est toujours plus long que l'essai</button>
+        <button class="cho" onclick="qcm(event,'q1b',false,'fb1','','q1c-w')">Est écrit à la première personne</button>
+      </div>
+    </div>
+    <div id="q1c-w" style="display:none"><div class="q-sep"></div>
+      <div class="q-txt">3. Le roman appartient à quel grand genre littéraire ?</div>
+      <div class="choices" id="q1c">
+        <button class="cho" onclick="qcm(event,'q1c',false,'fb1','','q1-end')">Le genre lyrique (poésie)</button>
+        <button class="cho" onclick="qcm(event,'q1c',false,'fb1','','q1-end')">Le genre dramatique (théâtre)</button>
+        <button class="cho" onclick="qcm(event,'q1c',true,'fb1','✅ Le roman est un genre narratif en prose, aux côtés de la nouvelle, du conte et de la fable.','q1-end')">Le genre narratif (en prose)</button>
+        <button class="cho" onclick="qcm(event,'q1c',false,'fb1','','q1-end')">Le genre épique (en vers)</button>
+      </div>
+    </div>
+    <div id="q1-end" style="display:none"></div>
+    <div class="hbox" id="h1">💡 Roman = prose + longueur (100+ pages) + fiction + personnages complexes. Se distingue de la poésie (vers), du théâtre (dialogue), de l'essai (non-fiction).</div>
+    <div class="fb" id="fb1"></div>
+    <div class="cfoot"><button class="btn-ghost" onclick="tog('h1')">🕯 Indice</button></div>
+  </div>
+</div>
+
+<!-- S2 -->
+<div class="screen room-screen" id="sc-s2">
+  <div class="room-hdr"><div class="act-lbl">Acte I · Salle 2</div><h2 class="room-ttl">🗝 La Salle des Composantes</h2><p class="room-stl">Les éléments constitutifs du roman</p></div>
+  <div class="progbar" id="pb2"></div>
+  <button class="btn-back" onclick="goHub()">← Retour à la bibliothèque</button>
+  <div class="card">
+    <div class="ctx">Cinq clés, cinq serrures. Reliez chaque terme à sa définition.</div>
+    <div class="q-txt">Associez chaque terme à sa définition (cliquez un terme, puis sa définition) :</div>
+    <div class="assoc-wrap" id="as2">
+      <div><div class="acol-hd">🔑 Terme</div>
+        <div class="ai" data-g="A" data-id="t1" onclick="doAssoc(event,this,'as2','fb2')">Narrateur</div>
+        <div class="ai" data-g="A" data-id="t2" onclick="doAssoc(event,this,'as2','fb2')">Personnage</div>
+        <div class="ai" data-g="A" data-id="t3" onclick="doAssoc(event,this,'as2','fb2')">Intrigue</div>
+        <div class="ai" data-g="A" data-id="t4" onclick="doAssoc(event,this,'as2','fb2')">Cadre spatio-temporel</div>
+        <div class="ai" data-g="A" data-id="t5" onclick="doAssoc(event,this,'as2','fb2')">Thème</div>
+      </div>
+      <div><div class="acol-hd">🔒 Définition</div>
+        <div class="ai" data-g="B" data-id="t3" onclick="doAssoc(event,this,'as2','fb2')">Enchaînement d'événements qui constituent l'histoire</div>
+        <div class="ai" data-g="B" data-id="t1" onclick="doAssoc(event,this,'as2','fb2')">Instance qui prend en charge le récit et le raconte</div>
+        <div class="ai" data-g="B" data-id="t5" onclick="doAssoc(event,this,'as2','fb2')">Idée centrale ou sujet récurrent traversant l'œuvre</div>
+        <div class="ai" data-g="B" data-id="t2" onclick="doAssoc(event,this,'as2','fb2')">Être fictif qui agit, pense et ressent dans le récit</div>
+        <div class="ai" data-g="B" data-id="t4" onclick="doAssoc(event,this,'as2','fb2')">Lieu(x) et époque où se déroule l'action</div>
+      </div>
+    </div>
+    <div class="hbox" id="h2">💡 Narrateur (raconte), Personnage (agit), Intrigue (événements), Cadre (où/quand), Thème (idée centrale).</div>
+    <div class="fb" id="fb2"></div>
+    <div class="cfoot"><button class="btn-ghost" onclick="tog('h2')">🕯 Indice</button></div>
+  </div>
+</div>
+
+<!-- S3 -->
+<div class="screen room-screen" id="sc-s3">
+  <div class="room-hdr"><div class="act-lbl">Acte I · Salle 3</div><h2 class="room-ttl">👁 La Tour du Narrateur</h2><p class="room-stl">Les points de vue narratifs</p></div>
+  <div class="progbar" id="pb3"></div>
+  <button class="btn-back" onclick="goHub()">← Retour à la bibliothèque</button>
+  <div class="card">
+    <div class="ctx"><em>«&nbsp;Tout dépend de qui regarde…&nbsp;»</em></div>
+    <div class="q-txt">1. Le narrateur omniscient est caractérisé par…</div>
+    <div class="choices" id="q3a">
+      <button class="cho" onclick="qcm(event,'q3a',false,'fb3','','q3b-w')">Il parle à la première personne et vit l'action</button>
+      <button class="cho" onclick="qcm(event,'q3a',true,'fb3','✅ Exact ! Le narrateur omniscient connaît les pensées et motivations de tous les personnages. Il est extérieur à l\'histoire.','q3b-w')">Il connaît les pensées et motivations de tous les personnages</button>
+      <button class="cho" onclick="qcm(event,'q3a',false,'fb3','','q3b-w')">Il ne rapporte que ce qu'il voit de l'extérieur</button>
+      <button class="cho" onclick="qcm(event,'q3a',false,'fb3','','q3b-w')">Il s'adresse au lecteur à la 2e personne</button>
+    </div>
+    <div id="q3b-w" style="display:none"><div class="q-sep"></div>
+      <div class="q-txt">2. Dans quel point de vue le narrateur est-il aussi un personnage qui dit «&nbsp;je&nbsp;» ?</div>
+      <div class="choices" id="q3b">
+        <button class="cho" onclick="qcm(event,'q3b',false,'fb3','','q3c-w')">Point de vue omniscient</button>
+        <button class="cho" onclick="qcm(event,'q3b',true,'fb3','✅ Bien ! Le narrateur-personnage (point de vue interne / homodiégétique) vit les événements et les raconte à la 1re personne.','q3c-w')">Point de vue interne (narrateur-personnage, «&nbsp;je&nbsp;»)</button>
+        <button class="cho" onclick="qcm(event,'q3b',false,'fb3','','q3c-w')">Point de vue externe ou objectif</button>
+        <button class="cho" onclick="qcm(event,'q3b',false,'fb3','','q3c-w')">Point de vue neutre</button>
+      </div>
+    </div>
+    <div id="q3c-w" style="display:none"><div class="q-sep"></div>
+      <div class="q-txt">3. Identifiez le point de vue de cet extrait :<em style="display:block;margin-top:8px;padding:10px 14px;background:rgba(0,0,0,.25);border-left:3px solid var(--or);font-size:1rem;">"Florentine se leva brusquement. Jean Lévesque la regardait s'éloigner, la suivant des yeux avec une attention froide, presque cruelle."</em></div>
+      <div class="choices" id="q3c">
+        <button class="cho" onclick="qcm(event,'q3c',false,'fb3','','q3-end')">Interne (dans la tête de Florentine)</button>
+        <button class="cho" onclick="qcm(event,'q3c',false,'fb3','','q3-end')">Omniscient (accès aux pensées profondes)</button>
+        <button class="cho" onclick="qcm(event,'q3c',true,'fb3','✅ C\'est un point de vue externe : on décrit des gestes et des regards, sans accéder aux pensées. Inspiré de <em>Bonheur d\'occasion</em>.','q3-end')">Externe (comportemental, pas de pensées)</button>
+        <button class="cho" onclick="qcm(event,'q3c',false,'fb3','','q3-end')">À la 2e personne</button>
+      </div>
+    </div>
+    <div id="q3-end" style="display:none"></div>
+    <div class="hbox" id="h3">💡 Omniscient = sait tout, extérieur ; Interne = «&nbsp;je&nbsp;», narrateur-personnage ; Externe = décrit ce qu'on voit, sans pensées.</div>
+    <div class="fb" id="fb3"></div>
+    <div class="cfoot"><button class="btn-ghost" onclick="tog('h3')">🕯 Indice</button></div>
+  </div>
+</div>
+
+<!-- S4 -->
+<div class="screen room-screen" id="sc-s4">
+  <div class="room-hdr"><div class="act-lbl">Acte I · Salle 4</div><h2 class="room-ttl">🏺 La Galerie des Genres</h2><p class="room-stl">Les sous-genres du roman</p></div>
+  <div class="progbar" id="pb4"></div>
+  <button class="btn-back" onclick="goHub()">← Retour à la bibliothèque</button>
+  <div class="card">
+    <div class="ctx">Six alcôves, six sous-genres. Associez chacun à sa description.</div>
+    <div class="q-txt">Associez chaque sous-genre à sa description :</div>
+    <div class="assoc-wrap" id="as4">
+      <div><div class="acol-hd">📖 Sous-genre</div>
+        <div class="ai" data-g="A" data-id="s1" onclick="doAssoc(event,this,'as4','fb4')">Roman d'apprentissage</div>
+        <div class="ai" data-g="A" data-id="s2" onclick="doAssoc(event,this,'as4','fb4')">Roman policier</div>
+        <div class="ai" data-g="A" data-id="s3" onclick="doAssoc(event,this,'as4','fb4')">Roman historique</div>
+        <div class="ai" data-g="A" data-id="s4" onclick="doAssoc(event,this,'as4','fb4')">Roman psychologique</div>
+        <div class="ai" data-g="A" data-id="s5" onclick="doAssoc(event,this,'as4','fb4')">Roman social</div>
+        <div class="ai" data-g="A" data-id="s6" onclick="doAssoc(event,this,'as4','fb4')">Roman épistolaire</div>
+      </div>
+      <div><div class="acol-hd">🔑 Description</div>
+        <div class="ai" data-g="B" data-id="s6" onclick="doAssoc(event,this,'as4','fb4')">Narré sous forme de lettres ou journaux échangés</div>
+        <div class="ai" data-g="B" data-id="s2" onclick="doAssoc(event,this,'as4','fb4')">Centré sur l'enquête pour résoudre un crime</div>
+        <div class="ai" data-g="B" data-id="s1" onclick="doAssoc(event,this,'as4','fb4')">Suit la maturation d'un jeune protagoniste</div>
+        <div class="ai" data-g="B" data-id="s5" onclick="doAssoc(event,this,'as4','fb4')">Critique les structures sociales et les inégalités</div>
+        <div class="ai" data-g="B" data-id="s3" onclick="doAssoc(event,this,'as4','fb4')">Fiction insérée dans un contexte historique réel</div>
+        <div class="ai" data-g="B" data-id="s4" onclick="doAssoc(event,this,'as4','fb4')">Plonge dans la vie intérieure et les émotions</div>
+      </div>
+    </div>
+    <div class="pnote"><strong>Note :</strong> Un roman peut appartenir à plusieurs sous-genres. Ex. : <em>Bonheur d'occasion</em> est social ET psychologique.</div>
+    <div class="hbox" id="h4">💡 <em>Bildungsroman</em> = roman d'apprentissage. Épistolaire = lettres (ex. : <em>Les Liaisons dangereuses</em>). Historique = contexte réel documenté.</div>
+    <div class="fb" id="fb4"></div>
+    <div class="cfoot"><button class="btn-ghost" onclick="tog('h4')">🕯 Indice</button></div>
+  </div>
+</div>
+
+<!-- S5 -->
+<div class="screen room-screen" id="sc-s5">
+  <div class="room-hdr"><div class="act-lbl">Acte I · Salle 5</div><h2 class="room-ttl">📐 La Salle de la Structure</h2><p class="room-stl">Le schéma narratif</p></div>
+  <div class="progbar" id="pb5"></div>
+  <button class="btn-back" onclick="goHub()">← Retour à la bibliothèque</button>
+  <div class="card">
+    <div class="ctx">Cinq dalles, cinq inscriptions dispersées. Remettez-les dans le bon ordre.</div>
+    <div class="q-txt">Cliquez les 5 étapes dans l'ordre chronologique (1 = première) :</div>
+    <div class="ord-bank" id="ord5">
+      <div class="ord-item" data-v="3" onclick="ordClick(this,'ord5',5,'fb5','q5b-w')"><div class="ord-badge" id="ob5-3">?</div>Péripéties (complications, rebondissements)</div>
+      <div class="ord-item" data-v="1" onclick="ordClick(this,'ord5',5,'fb5','q5b-w')"><div class="ord-badge" id="ob5-1">?</div>Situation initiale (état d'équilibre)</div>
+      <div class="ord-item" data-v="5" onclick="ordClick(this,'ord5',5,'fb5','q5b-w')"><div class="ord-badge" id="ob5-5">?</div>Situation finale (nouvel équilibre)</div>
+      <div class="ord-item" data-v="4" onclick="ordClick(this,'ord5',5,'fb5','q5b-w')"><div class="ord-badge" id="ob5-4">?</div>Dénouement (résolution du conflit)</div>
+      <div class="ord-item" data-v="2" onclick="ordClick(this,'ord5',5,'fb5','q5b-w')"><div class="ord-badge" id="ob5-2">?</div>Élément déclencheur (rupture de l'équilibre)</div>
+    </div>
+    <div id="q5b-w" style="display:none"><div class="q-sep"></div>
+      <div class="q-txt">Le schéma actantiel de Greimas — quel groupe est correct ?</div>
+      <div class="choices" id="q5b">
+        <button class="cho" onclick="qcm(event,'q5b',false,'fb5','','q5-end')">Héros, Méchant, Allié, Ennemi, Trésor, Château</button>
+        <button class="cho" onclick="qcm(event,'q5b',true,'fb5','✅ Exact ! Sujet (héros), Objet (but), Destinateur (mandate), Destinataire (bénéficie), Adjuvant (aide), Opposant (obstacle).','q5-end')">Sujet, Objet, Destinateur, Destinataire, Adjuvant, Opposant</button>
+        <button class="cho" onclick="qcm(event,'q5b',false,'fb5','','q5-end')">Protagoniste, Antagoniste, Confident, Objet, Lieu, Temps</button>
+        <button class="cho" onclick="qcm(event,'q5b',false,'fb5','','q5-end')">Narrateur, Lecteur, Auteur, Personnage, Thème, Symbole</button>
+      </div>
+    </div>
+    <div id="q5-end" style="display:none"></div>
+    <div class="hbox" id="h5">💡 Schéma narratif : calme → perturbation → aventure → résolution → nouveau calme. C'est la structure de base de la plupart des récits.</div>
+    <div class="fb" id="fb5"></div>
+    <div class="cfoot"><button class="btn-ghost" onclick="tog('h5')">🕯 Indice</button></div>
+  </div>
+</div>
+
+<!-- S6 -->
+<div class="screen room-screen" id="sc-s6">
+  <div class="room-hdr"><div class="act-lbl">Acte II · Salle 6</div><h2 class="room-ttl">🌿 Le Carrefour des Genres</h2><p class="room-stl">Roman, nouvelle, conte, fable, légende</p></div>
+  <div class="progbar" id="pb6"></div>
+  <button class="btn-back" onclick="goHub()">← Retour à la bibliothèque</button>
+  <div class="card">
+    <div class="ctx">Quatre chemins divergent dans la forêt des mots. Reconnaissez chaque genre narratif.</div>
+    <div class="q-txt">1. Texte court, peu de personnages, action condensée, souvent une chute inattendue. Quel genre ?</div>
+    <div class="choices" id="q6a">
+      <button class="cho" onclick="qcm(event,'q6a',false,'fb6','','q6b-w')">Le roman</button>
+      <button class="cho" onclick="qcm(event,'q6a',true,'fb6','✅ La nouvelle se distingue par sa brièveté. La chute — souvent surprenante — en est la marque distinctive.','q6b-w')">La nouvelle</button>
+      <button class="cho" onclick="qcm(event,'q6a',false,'fb6','','q6b-w')">Le conte</button>
+      <button class="cho" onclick="qcm(event,'q6a',false,'fb6','','q6b-w')">La fable</button>
+    </div>
+    <div id="q6b-w" style="display:none"><div class="q-sep"></div>
+      <div class="q-txt">2. Récit bref avec des animaux qui parlent et une morale explicite. Quel genre ?</div>
+      <div class="choices" id="q6b">
+        <button class="cho" onclick="qcm(event,'q6b',false,'fb6','','q6c-w')">Le conte</button>
+        <button class="cho" onclick="qcm(event,'q6b',false,'fb6','','q6c-w')">La légende</button>
+        <button class="cho" onclick="qcm(event,'q6b',true,'fb6','✅ La fable utilise l\'allégorie animale pour transmettre une leçon morale. Les <em>Fables</em> de La Fontaine en sont l\'exemple classique.','q6c-w')">La fable</button>
+        <button class="cho" onclick="qcm(event,'q6b',false,'fb6','','q6c-w')">Le mythe</button>
+      </div>
+    </div>
+    <div id="q6c-w" style="display:none"><div class="q-sep"></div>
+      <div class="q-txt">3. Ce qui distingue le conte de la légende, c'est que la légende…</div>
+      <div class="choices" id="q6c">
+        <button class="cho" onclick="qcm(event,'q6c',false,'fb6','','q6d-w')">Contient toujours des animaux parlants</button>
+        <button class="cho" onclick="qcm(event,'q6c',true,'fb6','✅ La légende est ancrée dans un lieu ou une époque réels (ex. : la Corriveau, le Rocher Percé). Le conte dit «&nbsp;Il était une fois…&nbsp;» sans précision.','q6d-w')">Est ancrée dans un lieu ou une époque réels et crédibles</button>
+        <button class="cho" onclick="qcm(event,'q6c',false,'fb6','','q6d-w')">Se termine toujours bien</button>
+        <button class="cho" onclick="qcm(event,'q6c',false,'fb6','','q6d-w')">N'est jamais transmise oralement</button>
+      </div>
+    </div>
+    <div id="q6d-w" style="display:none"><div class="q-sep"></div>
+      <div class="q-txt">4. Quelle formule d'ouverture est typique du conte traditionnel ?</div>
+      <div class="choices" id="q6d">
+        <button class="cho" onclick="qcm(event,'q6d',false,'fb6','','q6-end')">«&nbsp;En l'an de grâce 1837…&nbsp;»</button>
+        <button class="cho" onclick="qcm(event,'q6d',true,'fb6','✅ «&nbsp;Il était une fois…&nbsp;» place le récit hors du temps précis, caractéristique du merveilleux.','q6-end')">«&nbsp;Il était une fois…&nbsp;»</button>
+        <button class="cho" onclick="qcm(event,'q6d',false,'fb6','','q6-end')">«&nbsp;Je me souviens du jour où…&nbsp;»</button>
+        <button class="cho" onclick="qcm(event,'q6d',false,'fb6','','q6-end')">«&nbsp;La morale de cette histoire est…&nbsp;»</button>
+      </div>
+    </div>
+    <div id="q6-end" style="display:none"></div>
+    <div class="hbox" id="h6">💡 Fable (morale + animaux) · Conte («&nbsp;Il était une fois&nbsp;» + merveilleux) · Légende (ancrage réel) · Nouvelle (brièveté + chute) · Roman (long + complexe).</div>
+    <div class="fb" id="fb6"></div>
+    <div class="cfoot"><button class="btn-ghost" onclick="tog('h6')">🕯 Indice</button></div>
+  </div>
+</div>
+
+<!-- S7 -->
+<div class="screen room-screen" id="sc-s7">
+  <div class="room-hdr"><div class="act-lbl">Acte II · Salle 7</div><h2 class="room-ttl">⚖️ La Chambre des Comparaisons</h2><p class="room-stl">Roman vs Nouvelle</p></div>
+  <div class="progbar" id="pb7"></div>
+  <button class="btn-back" onclick="goHub()">← Retour à la bibliothèque</button>
+  <div class="card">
+    <div class="ctx">Deux coffres : <strong>Roman</strong> et <strong>Nouvelle</strong>. Cliquez d'abord sur un trait, puis sur le bon coffre pour l'y déposer.</div>
+    <div class="q-txt">Attribuez chaque caractéristique au bon genre :</div>
+    <div class="compar-cats">
+      <div class="compar-cat" id="cat-R" onclick="assignCompar('R')"><div class="ccat-hd">📗 Roman</div><div class="ccat-zone" id="zone-R"></div></div>
+      <div class="compar-cat" id="cat-N" onclick="assignCompar('N')"><div class="ccat-hd">📄 Nouvelle</div><div class="ccat-zone" id="zone-N"></div></div>
+    </div>
+    <div class="compar-bank" id="cbank">
+      <div class="citem" data-cat="N" onclick="selCompar(this)">Texte court (quelques pages à quelques dizaines)</div>
+      <div class="citem" data-cat="R" onclick="selCompar(this)">Texte long (souvent plusieurs centaines de pages)</div>
+      <div class="citem" data-cat="N" onclick="selCompar(this)">Peu de personnages, peu développés</div>
+      <div class="citem" data-cat="R" onclick="selCompar(this)">Personnages complexes et fouillés psychologiquement</div>
+      <div class="citem" data-cat="N" onclick="selCompar(this)">Une seule intrigue très concentrée</div>
+      <div class="citem" data-cat="R" onclick="selCompar(this)">Plusieurs intrigues pouvant se croiser</div>
+      <div class="citem" data-cat="N" onclick="selCompar(this)">Se termine souvent par une chute révélatrice</div>
+      <div class="citem" data-cat="R" onclick="selCompar(this)">Permet une évolution significative des personnages dans le temps</div>
+    </div>
+    <div class="hbox" id="h7">💡 La nouvelle = «&nbsp;instantané photographique&nbsp;» ; le roman = un film. La nouvelle exige l'économie totale ; la chute est sa marque distinctive.</div>
+    <div class="fb" id="fb7"></div>
+    <div class="cfoot"><button class="btn-ghost" onclick="tog('h7')">🕯 Indice</button></div>
+  </div>
+</div>
+
+<!-- S8 -->
+<div class="screen room-screen" id="sc-s8">
+  <div class="room-hdr"><div class="act-lbl">Acte II · Salle 8</div><h2 class="room-ttl">🪔 La Cave aux Contes</h2><p class="room-stl">Le conte et le premier roman québécois</p></div>
+  <div class="progbar" id="pb8"></div>
+  <button class="btn-back" onclick="goHub()">← Retour à la bibliothèque</button>
+  <div class="card">
+    <div class="ctx">Une voix grave dans l'obscurité raconte des histoires de diable et de chasse-galerie…</div>
+    <div class="q-txt">1. Quel texte est le premier roman québécois publié (1837) ?</div>
+    <div class="choices" id="q8a">
+      <button class="cho" onclick="qcm(event,'q8a',false,'fb8','','q8b-w')">Les Anciens Canadiens — Philippe Aubert de Gaspé père</button>
+      <button class="cho" onclick="qcm(event,'q8a',false,'fb8','','q8b-w')">Maria Chapdelaine — Louis Hémon</button>
+      <button class="cho" onclick="qcm(event,'q8a',true,'fb8','✅ Exact ! <em>L\'Influence d\'un livre</em> (1837) de Philippe Aubert de Gaspé fils est le premier roman québécois. Il mêle merveilleux, crime et tradition orale.','q8b-w')">L'Influence d'un livre — Philippe Aubert de Gaspé fils</button>
+      <button class="cho" onclick="qcm(event,'q8a',false,'fb8','','q8b-w')">Angéline de Montbrun — Laure Conan</button>
+    </div>
+    <div id="q8b-w" style="display:none"><div class="q-sep"></div>
+      <div class="q-txt">2. <em>La Chasse-galerie</em>, conte de bûcherons pactuisant avec le diable — qui l'a mis par écrit en 1900 ?</div>
+      <div class="choices" id="q8b">
+        <button class="cho" onclick="qcm(event,'q8b',false,'fb8','','q8c-w')">Louis Hémon</button>
+        <button class="cho" onclick="qcm(event,'q8b',false,'fb8','','q8c-w')">Félix Leclerc</button>
+        <button class="cho" onclick="qcm(event,'q8b',true,'fb8','✅ Honoré Beaugrand a mis en texte cette légende sur des bûcherons voyageant en canot volant grâce au diable, qui circulait oralement depuis longtemps.','q8c-w')">Honoré Beaugrand</button>
+        <button class="cho" onclick="qcm(event,'q8b',false,'fb8','','q8c-w')">Pamphile Le May</button>
+      </div>
+    </div>
+    <div id="q8c-w" style="display:none"><div class="q-sep"></div>
+      <div class="q-txt">3. Quelle figure légendaire, exécutée en 1763 et exposée dans une cage de fer, est devenue un symbole littéraire majeur au Québec ?</div>
+      <div class="choices" id="q8c">
+        <button class="cho" onclick="qcm(event,'q8c',false,'fb8','','q8-end')">La Vouivre</button>
+        <button class="cho" onclick="qcm(event,'q8c',true,'fb8','✅ Marie-Josephte Corriveau est devenue un personnage légendaire de la littérature québécoise (Anne Hébert, Victor-Lévy Beaulieu, et bien d\'autres).','q8-end')">La Corriveau</button>
+        <button class="cho" onclick="qcm(event,'q8c',false,'fb8','','q8-end')">La Dame Blanche</button>
+        <button class="cho" onclick="qcm(event,'q8c',false,'fb8','','q8-end')">Rose Latulippe</button>
+      </div>
+    </div>
+    <div id="q8-end" style="display:none"></div>
+    <div class="hbox" id="h8">💡 Conte québécois traditionnel : diable, loup-garou, feux follets, revenants. Ces récits vivaient dans les veillées d'hiver avant d'être mis à l'écrit.</div>
+    <div class="fb" id="fb8"></div>
+    <div class="cfoot"><button class="btn-ghost" onclick="tog('h8')">🕯 Indice</button></div>
+  </div>
+</div>
+
+<!-- S9 -->
+<div class="screen room-screen" id="sc-s9">
+  <div class="room-hdr"><div class="act-lbl">Acte III · Salle 9</div><h2 class="room-ttl">🕰 La Salle du Temps</h2><p class="room-stl">Les grandes périodes littéraires québécoises</p></div>
+  <div class="progbar" id="pb9"></div>
+  <button class="btn-back" onclick="goHub()">← Retour à la bibliothèque</button>
+  <div class="card">
+    <div class="ctx">Une horloge monumentale s'est arrêtée. Classez les grandes périodes dans le bon ordre.</div>
+    <div class="q-txt">Cliquez les 4 périodes dans l'ordre chronologique :</div>
+    <div class="ord-bank" id="ord9">
+      <div class="ord-item" data-v="3" onclick="ordClick(this,'ord9',4,'fb9','q9b-w')"><div class="ord-badge" id="ob9-3">?</div>La Modernité et la Révolution tranquille (années 1960–1970)</div>
+      <div class="ord-item" data-v="1" onclick="ordClick(this,'ord9',4,'fb9','q9b-w')"><div class="ord-badge" id="ob9-1">?</div>Les premiers textes et le roman du terroir (XIXe s. – 1940)</div>
+      <div class="ord-item" data-v="4" onclick="ordClick(this,'ord9',4,'fb9','q9b-w')"><div class="ord-badge" id="ob9-4">?</div>La littérature contemporaine et migrante (1980 à aujourd'hui)</div>
+      <div class="ord-item" data-v="2" onclick="ordClick(this,'ord9',4,'fb9','q9b-w')"><div class="ord-badge" id="ob9-2">?</div>L'Entre-deux-guerres et la rupture vers l'urbain (1940–1960)</div>
+    </div>
+    <div id="q9b-w" style="display:none"><div class="q-sep"></div>
+      <div class="q-txt">Quelle période est associée aux thèmes de la terre, de la famille et de la religion catholique rurale ?</div>
+      <div class="choices" id="q9b">
+        <button class="cho" onclick="qcm(event,'q9b',true,'fb9','✅ Le roman du terroir (XIXe s. – 1940) valorise l\'attachement à la terre ancestrale comme seule voie de survie de la nation canadienne-française.','q9-end')">Les premiers textes et le roman du terroir (XIXe s. – 1940)</button>
+        <button class="cho" onclick="qcm(event,'q9b',false,'fb9','','q9-end')">La Révolution tranquille (1960–1970)</button>
+        <button class="cho" onclick="qcm(event,'q9b',false,'fb9','','q9-end')">La littérature contemporaine (1980–aujourd'hui)</button>
+        <button class="cho" onclick="qcm(event,'q9b',false,'fb9','','q9-end')">L'Entre-deux-guerres (1940–1960)</button>
+      </div>
+    </div>
+    <div id="q9-end" style="display:none"></div>
+    <div class="hbox" id="h9">💡 4 périodes : (1) XIXe–1940 : terroir ; (2) 1940–1960 : rupture/urbain ; (3) 1960–1980 : modernité ; (4) 1980–auj. : littérature migrante.</div>
+    <div class="fb" id="fb9"></div>
+    <div class="cfoot"><button class="btn-ghost" onclick="tog('h9')">🕯 Indice</button></div>
+  </div>
+</div>
+
+<!-- S10 -->
+<div class="screen room-screen" id="sc-s10">
+  <div class="room-hdr"><div class="act-lbl">Acte III · Salle 10</div><h2 class="room-ttl">🌾 La Grange du Terroir</h2><p class="room-stl">Le roman du terroir québécois</p></div>
+  <div class="progbar" id="pb10"></div>
+  <button class="btn-back" onclick="goHub()">← Retour à la bibliothèque</button>
+  <div class="card">
+    <div class="ctx">L'odeur du foin, le craquement des planches. L'univers du roman du terroir.</div>
+    <div class="q-txt">1. Quel roman est le plus emblématique du terroir québécois ?</div>
+    <div class="choices" id="q10a">
+      <button class="cho" onclick="qcm(event,'q10a',false,'fb10','','q10b-w')">Bonheur d'occasion — Gabrielle Roy (1945)</button>
+      <button class="cho" onclick="qcm(event,'q10a',true,'fb10','✅ <em>Maria Chapdelaine</em> (1916) est l\'archétype du terroir : vie paysanne, terre, foi, langue. Paradoxalement, écrit par le Breton Louis Hémon.','q10b-w')">Maria Chapdelaine — Louis Hémon (1916)</button>
+      <button class="cho" onclick="qcm(event,'q10a',false,'fb10','','q10b-w')">Kamouraska — Anne Hébert (1970)</button>
+      <button class="cho" onclick="qcm(event,'q10a',false,'fb10','','q10b-w')">L'Avalée des avalés — Réjean Ducharme (1966)</button>
+    </div>
+    <div id="q10b-w" style="display:none"><div class="q-sep"></div>
+      <div class="q-txt">2. Louis Hémon était-il québécois de naissance ?</div>
+      <div class="choices" id="q10b">
+        <button class="cho" onclick="qcm(event,'q10b',false,'fb10','','q10c-w')">Oui, né à Québec</button>
+        <button class="cho" onclick="qcm(event,'q10b',true,'fb10','✅ Non ! Hémon était Français, né à Brest en 1880. Il s\'installa au Lac-Saint-Jean vers 1912, y écrivit <em>Maria Chapdelaine</em> et mourut tragiquement en 1913.','q10c-w')">Non, il était Français (né à Brest)</button>
+        <button class="cho" onclick="qcm(event,'q10b',false,'fb10','','q10c-w')">Non, il était Irlandais</button>
+        <button class="cho" onclick="qcm(event,'q10b',false,'fb10','','q10c-w')">Non, il était Belge</button>
+      </div>
+    </div>
+    <div id="q10c-w" style="display:none"><div class="q-sep"></div>
+      <div class="q-txt">3. Dans le roman du terroir, l'exode rural est vu comme…</div>
+      <div class="choices" id="q10c">
+        <button class="cho" onclick="qcm(event,'q10c',false,'fb10','','q10-end')">Un progrès positif</button>
+        <button class="cho" onclick="qcm(event,'q10c',false,'fb10','','q10-end')">Un phénomène neutre</button>
+        <button class="cho" onclick="qcm(event,'q10c',true,'fb10','✅ Dans l\'idéologie agriculturiste, quitter la terre est une trahison de la patrie, de la langue et de la foi. Le roman du terroir prêche le retour à la terre comme devoir national.','q10-end')">Une trahison, une menace pour l'identité nationale</button>
+        <button class="cho" onclick="qcm(event,'q10c',false,'fb10','','q10-end')">Un choix personnel sans conséquences</button>
+      </div>
+    </div>
+    <div id="q10-end" style="display:none"></div>
+    <div class="hbox" id="h10">💡 Terroir : <em>Maria Chapdelaine</em> (Hémon, 1916), <em>Menaud maître-draveur</em> (Savard, 1937), <em>Trente arpents</em> (Ringuet, 1938) — ce dernier marque la fin du genre.</div>
+    <div class="fb" id="fb10"></div>
+    <div class="cfoot"><button class="btn-ghost" onclick="tog('h10')">🕯 Indice</button></div>
+  </div>
+</div>
+
+<!-- S11 -->
+<div class="screen room-screen" id="sc-s11">
+  <div class="room-hdr"><div class="act-lbl">Acte III · Salle 11</div><h2 class="room-ttl">⚡ La Chambre de la Rupture</h2><p class="room-stl">La Révolution tranquille et la modernité</p></div>
+  <div class="progbar" id="pb11"></div>
+  <button class="btn-back" onclick="goHub()">← Retour à la bibliothèque</button>
+  <div class="card">
+    <div class="ctx">Les murs se fissurent, laissant entrer la lumière. Nous sommes dans les années 1960.</div>
+    <div class="q-txt">1. La Révolution tranquille correspond à quelle décennie ?</div>
+    <div class="choices" id="q11a">
+      <button class="cho" onclick="qcm(event,'q11a',false,'fb11','','q11b-w')">Les années 1940</button>
+      <button class="cho" onclick="qcm(event,'q11a',false,'fb11','','q11b-w')">Les années 1950</button>
+      <button class="cho" onclick="qcm(event,'q11a',true,'fb11','✅ Les années 1960 : laïcisation, nationalisme, modernisation de l\'État. La mort de Duplessis (1959) ouvre une ère nouvelle.','q11b-w')">Les années 1960</button>
+      <button class="cho" onclick="qcm(event,'q11a',false,'fb11','','q11b-w')">Les années 1970</button>
+    </div>
+    <div id="q11b-w" style="display:none"><div class="q-sep"></div>
+      <div class="q-txt">2. Qu'est-ce que le «&nbsp;joual&nbsp;» dans la littérature québécoise ?</div>
+      <div class="choices" id="q11b">
+        <button class="cho" onclick="qcm(event,'q11b',false,'fb11','','q11c-w')">Un genre romanesque propre au terroir</button>
+        <button class="cho" onclick="qcm(event,'q11b',true,'fb11','✅ Le joual est le parler populaire québécois (anglicismes, déformations phonétiques) revendiqué comme langue littéraire par Michel Tremblay, symbole d\'identité nationale.','q11c-w')">Le français populaire québécois, utilisé comme langue littéraire revendicatrice</button>
+        <button class="cho" onclick="qcm(event,'q11b',false,'fb11','','q11c-w')">Un style poétique d'inspiration amérindienne</button>
+        <button class="cho" onclick="qcm(event,'q11b',false,'fb11','','q11c-w')">La langue officielle du parlement québécois</button>
+      </div>
+    </div>
+    <div id="q11c-w" style="display:none"><div class="q-sep"></div>
+      <div class="q-txt">3. Quel était le mot d'ordre de la revue <em>Parti pris</em> (1963–1968) ?</div>
+      <div class="choices" id="q11c">
+        <button class="cho" onclick="qcm(event,'q11c',false,'fb11','','q11-end')">Retour à la terre et aux valeurs catholiques</button>
+        <button class="cho" onclick="qcm(event,'q11c',false,'fb11','','q11-end')">Réconciliation avec le Canada anglais</button>
+        <button class="cho" onclick="qcm(event,'q11c',true,'fb11','✅ <em>Parti pris</em> défendait un Québec laïc, socialiste et indépendant. Sa littérature utilisait le joual pour affirmer l\'identité et dénoncer l\'aliénation coloniale.','q11-end')">Un Québec laïc, socialiste et indépendant</button>
+        <button class="cho" onclick="qcm(event,'q11c',false,'fb11','','q11-end')">L'assimilation culturelle à la France métropolitaine</button>
+      </div>
+    </div>
+    <div id="q11-end" style="display:none"></div>
+    <div class="hbox" id="h11">💡 Auteurs clés : Hubert Aquin (<em>Prochain épisode</em>, 1965), Marie-Claire Blais (<em>Une saison…</em>, 1965), Réjean Ducharme (<em>L\'Avalée des avalés</em>, 1966).</div>
+    <div class="fb" id="fb11"></div>
+    <div class="cfoot"><button class="btn-ghost" onclick="tog('h11')">🕯 Indice</button></div>
+  </div>
+</div>
+
+<!-- S12 -->
+<div class="screen room-screen" id="sc-s12">
+  <div class="room-hdr"><div class="act-lbl">Acte III · Salle 12</div><h2 class="room-ttl">🖼 Le Panthéon des Lettres</h2><p class="room-stl">7 auteur·e·s et leurs œuvres</p></div>
+  <div class="progbar" id="pb12"></div>
+  <button class="btn-back" onclick="goHub()">← Retour à la bibliothèque</button>
+  <div class="card">
+    <div class="ctx">Les cartouches sous les portraits sont tombés. Replacez chaque œuvre sous son auteur·e.</div>
+    <div class="q-txt">Associez les auteur·e·s à leurs œuvres :</div>
+    <div class="assoc-wrap" id="as12">
+      <div><div class="acol-hd">✒ Auteur·e</div>
+        <div class="ai" data-g="A" data-id="p1" onclick="doAssoc(event,this,'as12','fb12')">Gabrielle Roy</div>
+        <div class="ai" data-g="A" data-id="p2" onclick="doAssoc(event,this,'as12','fb12')">Anne Hébert</div>
+        <div class="ai" data-g="A" data-id="p3" onclick="doAssoc(event,this,'as12','fb12')">Marie-Claire Blais</div>
+        <div class="ai" data-g="A" data-id="p4" onclick="doAssoc(event,this,'as12','fb12')">Michel Tremblay</div>
+        <div class="ai" data-g="A" data-id="p5" onclick="doAssoc(event,this,'as12','fb12')">Réjean Ducharme</div>
+        <div class="ai" data-g="A" data-id="p6" onclick="doAssoc(event,this,'as12','fb12')">Dany Laferrière</div>
+        <div class="ai" data-g="A" data-id="p7" onclick="doAssoc(event,this,'as12','fb12')">Kim Thúy</div>
+      </div>
+      <div><div class="acol-hd">📖 Œuvre</div>
+        <div class="ai" data-g="B" data-id="p4" onclick="doAssoc(event,this,'as12','fb12')">La Grosse Femme d'à côté est enceinte (1978)</div>
+        <div class="ai" data-g="B" data-id="p1" onclick="doAssoc(event,this,'as12','fb12')">Bonheur d'occasion (1945)</div>
+        <div class="ai" data-g="B" data-id="p7" onclick="doAssoc(event,this,'as12','fb12')">Ru (2009)</div>
+        <div class="ai" data-g="B" data-id="p3" onclick="doAssoc(event,this,'as12','fb12')">Une saison dans la vie d'Emmanuel (1965)</div>
+        <div class="ai" data-g="B" data-id="p6" onclick="doAssoc(event,this,'as12','fb12')">Comment faire l'amour avec un Nègre sans se fatiguer (1985)</div>
+        <div class="ai" data-g="B" data-id="p2" onclick="doAssoc(event,this,'as12','fb12')">Kamouraska (1970)</div>
+        <div class="ai" data-g="B" data-id="p5" onclick="doAssoc(event,this,'as12','fb12')">L'Avalée des avalés (1966)</div>
+      </div>
+    </div>
+    <div class="hbox" id="h12">💡 Kim Thúy et Dany Laferrière = littérature migrante. Laferrière → Académie française (2013). Kim Thúy → Prix du Gouverneur général (2010).</div>
+    <div class="fb" id="fb12"></div>
+    <div class="cfoot"><button class="btn-ghost" onclick="tog('h12')">🕯 Indice</button></div>
+  </div>
+</div>
+
+<!-- S13 -->
+<div class="screen room-screen" id="sc-s13">
+  <div class="room-hdr"><div class="act-lbl">Acte III · Salle 13</div><h2 class="room-ttl">📜 Le Cabinet des Extraits</h2><p class="room-stl">Reconnaître les œuvres</p></div>
+  <div class="progbar" id="pb13"></div>
+  <button class="btn-back" onclick="goHub()">← Retour à la bibliothèque</button>
+  <div class="card">
+    <div class="ctx">Des parchemins décrivent des œuvres sans les nommer. Saurez-vous les identifier ?</div>
+    <div class="q-txt">1. Roman (1945), quartier Saint-Henri, Montréal, Seconde Guerre mondiale, Florentine Lacasse, jeune serveuse. Quel titre ?</div>
+    <div class="choices" id="q13a">
+      <button class="cho" onclick="qcm(event,'q13a',false,'fb13','','q13b-w')">Kamouraska</button>
+      <button class="cho" onclick="qcm(event,'q13a',true,'fb13','✅ <em>Bonheur d\'occasion</em> de Gabrielle Roy (1945). Premier roman québécois à portée internationale — Prix Femina 1947.','q13b-w')">Bonheur d'occasion</button>
+      <button class="cho" onclick="qcm(event,'q13a',false,'fb13','','q13b-w')">Une saison dans la vie d'Emmanuel</button>
+      <button class="cho" onclick="qcm(event,'q13a',false,'fb13','','q13b-w')">Maria Chapdelaine</button>
+    </div>
+    <div id="q13b-w" style="display:none"><div class="q-sep"></div>
+      <div class="q-txt">2. Roman (1970), crime passionnel au XIXe siècle, narration fragmentée et poétique entre présent et passé. Auteure ?</div>
+      <div class="choices" id="q13b">
+        <button class="cho" onclick="qcm(event,'q13b',false,'fb13','','q13c-w')">Marie-Claire Blais</button>
+        <button class="cho" onclick="qcm(event,'q13b',false,'fb13','','q13c-w')">Gabrielle Roy</button>
+        <button class="cho" onclick="qcm(event,'q13b',true,'fb13','✅ <em>Kamouraska</em> d\'Anne Hébert (1970). Inspiré d\'un fait divers réel (1839), porté à l\'écran par Claude Jutra en 1973.','q13c-w')">Anne Hébert</button>
+        <button class="cho" onclick="qcm(event,'q13b',false,'fb13','','q13c-w')">Laure Conan</button>
+      </div>
+    </div>
+    <div id="q13c-w" style="display:none"><div class="q-sep"></div>
+      <div class="q-txt">3. Roman (1965), famille nombreuse et pauvre, vu par les yeux du nouveau-né Emmanuel. L'auteure avait 25 ans. Qui est-ce ?</div>
+      <div class="choices" id="q13c">
+        <button class="cho" onclick="qcm(event,'q13c',false,'fb13','','q13-end')">Anne Hébert</button>
+        <button class="cho" onclick="qcm(event,'q13c',false,'fb13','','q13-end')">Hubert Aquin</button>
+        <button class="cho" onclick="qcm(event,'q13c',true,'fb13','✅ <em>Une saison dans la vie d\'Emmanuel</em> de Marie-Claire Blais. Prix Médicis (France, 1966). Vision sombre et poétique de l\'enfance québécoise.','q13-end')">Marie-Claire Blais</button>
+        <button class="cho" onclick="qcm(event,'q13c',false,'fb13','','q13-end')">Réjean Ducharme</button>
+      </div>
+    </div>
+    <div id="q13-end" style="display:none"></div>
+    <div class="hbox" id="h13">💡 Prix : Roy = Femina 1947 · Blais = Médicis 1966 · Kim Thúy = Gouverneur général 2010 · Laferrière = Académie française 2013.</div>
+    <div class="fb" id="fb13"></div>
+    <div class="cfoot"><button class="btn-ghost" onclick="tog('h13')">🕯 Indice</button></div>
+  </div>
+</div>
+
+<!-- S14 -->
+<div class="screen room-screen" id="sc-s14">
+  <div class="room-hdr"><div class="act-lbl">Acte III · Salle 14 · DÉFI FINAL</div><h2 class="room-ttl">🔑 La Grande Porte</h2><p class="room-stl">Synthèse — 5 questions finales</p></div>
+  <div class="progbar" id="pb14"></div>
+  <button class="btn-back" onclick="goHub()">← Retour à la bibliothèque</button>
+  <div class="card">
+    <div class="ctx">La Grande Porte se dresse devant vous. Cinq dernières questions pour la franchir.</div>
+    <div class="q-txt">1. «&nbsp;Roman narré sous forme de lettres ou journaux échangés&nbsp;» → sous-genre ?</div>
+    <div class="choices" id="q14a">
+      <button class="cho" onclick="qcm(event,'q14a',false,'fb14','','q14b-w')">Roman policier</button>
+      <button class="cho" onclick="qcm(event,'q14a',false,'fb14','','q14b-w')">Roman d'apprentissage</button>
+      <button class="cho" onclick="qcm(event,'q14a',true,'fb14','✅ Roman épistolaire (du latin <em>epistola</em>, lettre). Ex. : <em>Les Liaisons dangereuses</em>, <em>La Nouvelle Héloïse</em>.','q14b-w')">Roman épistolaire</button>
+      <button class="cho" onclick="qcm(event,'q14a',false,'fb14','','q14b-w')">Roman psychologique</button>
+    </div>
+    <div id="q14b-w" style="display:none"><div class="q-sep"></div>
+      <div class="q-txt">2. Qui a écrit les <em>Chroniques du Plateau-Mont-Royal</em> en utilisant le joual ?</div>
+      <div class="choices" id="q14b">
+        <button class="cho" onclick="qcm(event,'q14b',false,'fb14','','q14c-w')">Réjean Ducharme</button>
+        <button class="cho" onclick="qcm(event,'q14b',true,'fb14','✅ Michel Tremblay, auteur de ces 6 romans (1978–1997) et des <em>Belles-sœurs</em> (1968), première pièce entièrement en joual.','q14c-w')">Michel Tremblay</button>
+        <button class="cho" onclick="qcm(event,'q14b',false,'fb14','','q14c-w')">Hubert Aquin</button>
+        <button class="cho" onclick="qcm(event,'q14b',false,'fb14','','q14c-w')">Yves Beauchemin</button>
+      </div>
+    </div>
+    <div id="q14c-w" style="display:none"><div class="q-sep"></div>
+      <div class="q-txt">3. Quel élément du schéma narratif correspond à la rupture de l'équilibre initial ?</div>
+      <div class="choices" id="q14c">
+        <button class="cho" onclick="qcm(event,'q14c',false,'fb14','','q14d-w')">La situation finale</button>
+        <button class="cho" onclick="qcm(event,'q14c',false,'fb14','','q14d-w')">Le point culminant</button>
+        <button class="cho" onclick="qcm(event,'q14c',true,'fb14','✅ L\'élément déclencheur brise la paix initiale et force les personnages à agir. Sans lui, il n\'y a pas de récit.','q14d-w')">L'élément déclencheur</button>
+        <button class="cho" onclick="qcm(event,'q14c',false,'fb14','','q14d-w')">Les péripéties</button>
+      </div>
+    </div>
+    <div id="q14d-w" style="display:none"><div class="q-sep"></div>
+      <div class="q-txt">4. Lequel est vrai sur la «&nbsp;littérature migrante&nbsp;» québécoise ?</div>
+      <div class="choices" id="q14d">
+        <button class="cho" onclick="qcm(event,'q14d',false,'fb14','','q14e-w')">Elle n'existe pas ; tous les auteurs québécois sont nés au Québec</button>
+        <button class="cho" onclick="qcm(event,'q14d',false,'fb14','','q14e-w')">Elle désigne uniquement les auteurs anglophones du Québec</button>
+        <button class="cho" onclick="qcm(event,'q14d',true,'fb14','✅ La littérature migrante regroupe des auteurs d\'origines diverses (Haïti, Vietnam, Maghreb…) écrivant en français depuis le Québec.','q14e-w')">Elle regroupe des auteurs d'origines diverses écrivant en français depuis le Québec</button>
+        <button class="cho" onclick="qcm(event,'q14d',false,'fb14','','q14e-w')">Elle est apparue avant la Révolution tranquille</button>
+      </div>
+    </div>
+    <div id="q14e-w" style="display:none"><div class="q-sep"></div>
+      <div class="q-txt">5. Quelle caractéristique appartient à la <em>nouvelle</em> et NON au roman ?</div>
+      <div class="choices" id="q14e">
+        <button class="cho" onclick="qcm(event,'q14e',false,'fb14','','q14-end')">Personnages psychologiquement complexes sur plusieurs chapitres</button>
+        <button class="cho" onclick="qcm(event,'q14e',false,'fb14','','q14-end')">Plusieurs intrigues secondaires entremêlées</button>
+        <button class="cho" onclick="qcm(event,'q14e',true,'fb14','✅ La <strong>chute finale</strong> inattendue ou révélatrice est la marque distinctive de la nouvelle. Elle concentre tout le sens du récit.','q14-end')">Une chute finale souvent inattendue ou révélatrice</button>
+        <button class="cho" onclick="qcm(event,'q14e',false,'fb14','','q14-end')">Un temps long permettant l'évolution des personnages</button>
+      </div>
+    </div>
+    <div id="q14-end" style="display:none">
+      <div class="codebox">
+        <div class="code-lbl">✦ Code de la Grande Porte ✦</div>
+        <div class="code-dig">1 8 3 7</div>
+        <p style="margin-top:10px;font-size:.86rem;color:rgba(232,213,163,.4);font-style:italic;">L'année du premier roman québécois : <em>L'Influence d'un livre</em></p>
+      </div>
+      <div style="text-align:center;"><button class="btn-or" onclick="goVic()">🚪 Franchir la Grande Porte</button></div>
+    </div>
+    <div class="hbox" id="h14">💡 Toutes les réponses viennent des salles précédentes. Relisez vos feedbacks !</div>
+    <div class="fb" id="fb14"></div>
+    <div class="cfoot"><button class="btn-ghost" onclick="tog('h14')">🕯 Indice</button></div>
+  </div>
+</div>
+
+<!-- VICTOIRE -->
+<div class="screen" id="sc-vic" style="justify-content:center;text-align:center;">
+  <div class="vic-ic">🎉</div>
+  <h2 class="vic-ttl">Vous êtes libre !</h2>
+  <div class="divhr" style="max-width:280px;margin:10px auto;"><span>❧</span></div>
+  <p style="font-size:1.08rem;color:var(--or-pale);max-width:560px;margin-bottom:22px;line-height:1.85;font-style:italic;">Vous avez exploré les trois ailes de la Bibliothèque des Ancêtres et résolu toutes les énigmes. Le roman et la littérature québécoise n'ont plus de secrets — ou presque. La vraie découverte commence dans les pages des œuvres elles-mêmes.</p>
+  <div class="cert">
+    <div class="cert-orn tl">◆</div><div class="cert-orn br">◆</div>
+    <div class="cert-ttl">✦ Certificat de l'Évadé·e des Lettres ✦</div>
+    <div class="cert-txt">Ceci certifie que l'étudiant·e a traversé avec succès les trois ailes de la Bibliothèque des Ancêtres, démontrant ses connaissances sur le roman, les genres narratifs et l'histoire de la littérature québécoise.</div>
+    <div class="cert-sc">Score : <span id="sc-display">—</span></div>
+  </div>
+  <p style="font-size:.95rem;color:var(--or-pale);margin-bottom:11px;">Pour aller plus loin :</p>
+  <div class="rdg">
+    <div class="rdg-i">📗 Bonheur d'occasion<small>Gabrielle Roy</small></div>
+    <div class="rdg-i">📘 Maria Chapdelaine<small>Louis Hémon</small></div>
+    <div class="rdg-i">📙 Kamouraska<small>Anne Hébert</small></div>
+    <div class="rdg-i">📕 Une saison dans la vie d'Emmanuel<small>Marie-Claire Blais</small></div>
+    <div class="rdg-i">📒 L'Avalée des avalés<small>Réjean Ducharme</small></div>
+    <div class="rdg-i">📓 Ru<small>Kim Thúy</small></div>
+  </div>
+  <button class="btn-or" style="margin-top:20px;" onclick="restart()">↺ Recommencer</button>
+</div>
+
+<script>
+// ========= CONFIG SALLES =========
+var ROOMS = [
+  {id:1, act:1, icon:'📚', name:'La Chambre des Définitions'},
+  {id:2, act:1, icon:'🗝', name:'La Salle des Composantes'},
+  {id:3, act:1, icon:'👁', name:'La Tour du Narrateur'},
+  {id:4, act:1, icon:'🏺', name:'La Galerie des Genres'},
+  {id:5, act:1, icon:'📐', name:'La Salle de la Structure'},
+  {id:6, act:2, icon:'🌿', name:'Le Carrefour des Genres'},
+  {id:7, act:2, icon:'⚖️', name:'La Chambre des Comparaisons'},
+  {id:8, act:2, icon:'🪔', name:'La Cave aux Contes'},
+  {id:9, act:3, icon:'🕰', name:'La Salle du Temps'},
+  {id:10,act:3, icon:'🌾', name:'La Grange du Terroir'},
+  {id:11,act:3, icon:'⚡', name:'La Chambre de la Rupture'},
+  {id:12,act:3, icon:'🖼', name:'Le Panthéon des Lettres'},
+  {id:13,act:3, icon:'📜', name:'Le Cabinet des Extraits'},
+  {id:14,act:3, icon:'🔑', name:'La Grande Porte'}
+];
+
+// ========= ÉTAT =========
+var G = {
+  score: 0,
+  total: 0,
+  done: {},      // room id -> true
+  assocSel: {A:null, B:null},
+  assocCount: {}, // wrapId -> count
+  ordState: {},  // bankId -> [vals placed]
+  comparSel: null,
+  comparDoneCount: 0,
+  comparTotal: 8,
+  curRoom: 0
+};
+
+// ========= PARTICULES =========
+(function(){
+  var c=document.getElementById('particles');
+  for(var i=0;i<22;i++){
+    var p=document.createElement('div');
+    p.className='dust';
+    p.style.left=(Math.random()*100)+'vw';
+    p.style.animationDuration=(9+Math.random()*14)+'s';
+    p.style.animationDelay=(Math.random()*10)+'s';
+    var sz=(1+Math.random()*3)+'px';
+    p.style.width=p.style.height=sz;
+    p.style.background=Math.random()>.7?'rgba(201,168,76,.8)':'rgba(201,168,76,.4)';
+    c.appendChild(p);
+  }
+})();
+
+// ========= BIBLIOTHÈQUES (déco) =========
+function buildShelf(id){
+  var el=document.getElementById(id);
+  if(!el) return;
+  var colors=['#8B1a1a','#1a3a8b','#1a6b3a','#6b1a5a','#3a5a1a','#8b6b1a','#1a5a6b','#6b3a1a'];
+  var widths=[12,16,10,14,11,18,13,15,10,17,12,16,11,14,10,13,15,12,16,10];
+  for(var i=0;i<widths.length;i++){
+    var b=document.createElement('div');
+    b.className='book';
+    b.style.width=widths[i]+'px';
+    b.style.height=(12+Math.random()*6)+'px';
+    b.style.background=colors[i%colors.length];
+    b.style.opacity=(0.5+Math.random()*.4).toFixed(2);
+    el.appendChild(b);
+  }
+}
+['shelf1','shelf2','shelf3'].forEach(buildShelf);
+
+// ========= CONSTRUIRE LE HUB =========
+function buildHub(){
+  [1,2,3].forEach(function(act){
+    var grid=document.getElementById('doors-act'+act);
+    if(!grid) return;
+    grid.innerHTML='';
+    ROOMS.filter(function(r){return r.act===act;}).forEach(function(r){
+      var isDone=!!G.done[r.id];
+      var wrap=document.createElement('div');
+      wrap.className='door-wrap'+(isDone?' done':'');
+      wrap.id='door-wrap-'+r.id;
+
+      // Coffre pour acte 3, porte pour actes 1&2
+      if(act===3){
+        wrap.innerHTML=
+          '<div class="chest-frame'+(isDone?' done':'')+'" onclick="enterRoom('+r.id+')" title="'+r.name+'">'
+            +'<div class="chest-lid"><div class="chest-clasp"></div></div>'
+            +'<div class="chest-body-inner">'
+              +'<div class="chest-num">Salle '+r.id+'</div>'
+              +'<div class="chest-icon">'+(isDone?'✅':r.icon)+'</div>'
+              +'<div class="chest-name">'+r.name+'</div>'
+            +'</div>'
+          +'</div>';
+      } else {
+        wrap.innerHTML=
+          '<div class="door-frame'+(isDone?' done':'')+'" onclick="enterRoom('+r.id+')" title="'+r.name+'">'
+            +'<div class="door-inner">'
+              +'<div class="door-num">Salle '+r.id+'</div>'
+              +'<div class="door-icon">'+(isDone?'✅':r.icon)+'</div>'
+              +'<div class="door-name">'+r.name+'</div>'
+            +'</div>'
+            +'<div class="door-handle"></div>'
+          +'</div>';
+      }
+      grid.appendChild(wrap);
+    });
+  });
+
+  // Score
+  var doneCnt=Object.keys(G.done).length;
+  document.getElementById('hub-done').textContent=doneCnt;
+  document.getElementById('hub-score').textContent=G.score;
+
+  // Bouton de fin
+  var btnFin=document.getElementById('btn-finish');
+  if(btnFin) btnFin.style.display=(doneCnt>=14)?'inline-block':'none';
+}
+
+// ========= NAVIGATION =========
+function fadeTo(id, cb){
+  var f=document.getElementById('fade');
+  f.classList.add('on');
+  setTimeout(function(){
+    document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+    var el=document.getElementById(id);
+    if(el) el.classList.add('active');
+    window.scrollTo(0,0);
+    if(cb) cb();
+    setTimeout(function(){f.classList.remove('on');},120);
+  },380);
+}
+
+function goHub(){
+  buildHub();
+  fadeTo('sc-hub');
+}
+
+function enterRoom(n){
+  G.curRoom=n;
+  updatePB(n);
+  fadeTo('sc-s'+n);
+}
+
+function goVic(){
+  document.getElementById('sc-display').textContent=G.score+' / '+G.total;
+  fadeTo('sc-vic');
+}
+
+function markDone(roomId){
+  if(G.done[roomId]) return;
+  G.done[roomId]=true;
+}
+
+// ========= BARRE DE PROGRESSION =========
+function updatePB(roomId){
+  var room=ROOMS.find(function(r){return r.id===roomId;});
+  if(!room) return;
+  var act=room.act-1;
+  var actRooms=ROOMS.filter(function(r){return r.act===room.act;});
+  var doneInAct=actRooms.filter(function(r){return G.done[r.id];}).length;
+  var totalInAct=actRooms.length;
+
+  var segs='';
+  for(var i=0;i<3;i++){
+    var ar=ROOMS.filter(function(r){return r.act===i+1;});
+    var di=ar.filter(function(r){return G.done[r.id];}).length;
+    var pct=Math.round(di/ar.length*100);
+    segs+='<div class="pb-seg"><div class="pb-fill" style="width:'+pct+'%"></div></div>';
+  }
+  for(var i=1;i<=14;i++){
+    var el=document.getElementById('pb'+i);
+    if(!el) continue;
+    el.innerHTML='<div class="pb-segs">'+segs+'</div>'
+      +'<div class="pb-lbls">'
+      +'<span class="pb-lbl'+(act===0?' act':'')+'">Acte I</span>'
+      +'<span class="pb-lbl'+(act===1?' act':'')+'">Acte II</span>'
+      +'<span class="pb-lbl'+(act===2?' act':'')+'">Acte III</span>'
+      +'</div>';
+  }
+}
+
+// ========= INDICE =========
+function tog(id){ document.getElementById(id).classList.toggle('show'); }
+
+// ========= FEEDBACK =========
+function showFB(id,type,msg){
+  var el=document.getElementById(id);
+  if(!el) return;
+  el.className='fb '+type+' show';
+  el.innerHTML=msg;
+}
+
+// ========= ROOM COMPLETE =========
+function onRoomComplete(roomId){
+  markDone(roomId);
+  updatePB(roomId);
+  // Mise à jour de la porte dans le hub en arrière-plan
+}
+
+// ========= QCM =========
+function qcm(ev, groupId, isOk, fbId, msg, nextId){
+  ev.stopPropagation();
+  var btn=ev.currentTarget;
+  var container=document.getElementById(groupId);
+  if(!container||btn.disabled) return;
+  container.querySelectorAll('.cho').forEach(function(b){b.disabled=true;});
+  G.total++;
+  if(isOk){
+    btn.className='cho ok';
+    G.score++;
+    if(msg) showFB(fbId,'ok',msg);
+  } else {
+    btn.className='cho bad';
+    container.querySelectorAll('.cho').forEach(function(b){
+      if((b.getAttribute('onclick')||'').indexOf(',true,')>=0) b.className='cho ok';
+    });
+    var e='❌ Ce n\'est pas la bonne réponse. La bonne réponse est indiquée en vert.';
+    if(msg) e+=' '+msg;
+    showFB(fbId,'bad',e);
+  }
+  if(nextId){
+    var delay=isOk?700:1900;
+    setTimeout(function(){
+      var next=document.getElementById(nextId);
+      if(!next) return;
+      next.style.display='block';
+      next.scrollIntoView({behavior:'smooth',block:'nearest'});
+      if(nextId.indexOf('-end')>=0){
+        onRoomComplete(G.curRoom);
+      }
+    }, delay);
+  }
+}
+
+// ========= ASSOCIATION =========
+function doAssoc(ev, el, wrapId, fbId){
+  ev.stopPropagation();
+  if(el.classList.contains('ok')) return;
+  var grp=el.dataset.g, id=el.dataset.id;
+  var wrap=document.getElementById(wrapId);
+
+  if(grp==='A'){
+    wrap.querySelectorAll('[data-g="A"]').forEach(function(a){a.classList.remove('sel');});
+    el.classList.add('sel');
+    G.assocSel.A={id:id,el:el};
+  } else {
+    wrap.querySelectorAll('[data-g="B"]').forEach(function(a){a.classList.remove('sel');});
+    el.classList.add('sel');
+    G.assocSel.B={id:id,el:el};
+  }
+
+  if(G.assocSel.A && G.assocSel.B){
+    G.total++;
+    if(!G.assocCount[wrapId]) G.assocCount[wrapId]=0;
+    var total=wrap.querySelectorAll('[data-g="A"]').length;
+    if(G.assocSel.A.id===G.assocSel.B.id){
+      G.assocSel.A.el.classList.remove('sel'); G.assocSel.A.el.classList.add('ok');
+      G.assocSel.B.el.classList.remove('sel'); G.assocSel.B.el.classList.add('ok');
+      G.score++; G.assocCount[wrapId]++;
+      if(G.assocCount[wrapId]===total){
+        showFB(fbId,'ok','✅ Parfait ! Toutes les associations sont correctes !');
+        onRoomComplete(G.curRoom);
+        setTimeout(function(){goHub();},1800);
+      } else {
+        showFB(fbId,'ok','✅ Bonne association ! Encore '+(total-G.assocCount[wrapId])+' à trouver.');
+      }
+    } else {
+      var sa=G.assocSel.A, sb=G.assocSel.B;
+      sa.el.classList.add('bad'); sb.el.classList.add('bad');
+      showFB(fbId,'bad','❌ Association incorrecte. Essayez encore !');
+      setTimeout(function(){sa.el.classList.remove('sel','bad');sb.el.classList.remove('sel','bad');},1100);
+    }
+    G.assocSel.A=null; G.assocSel.B=null;
+  }
+}
+
+// ========= ORDERING =========
+function ordClick(el, bankId, total, fbId, nextId){
+  if(el.classList.contains('picked')) return;
+  if(!G.ordState[bankId]) G.ordState[bankId]=[];
+  var state=G.ordState[bankId];
+  var val=parseInt(el.dataset.v);
+  var pos=state.length+1;
+  el.classList.add('picked');
+  var bid=bankId.replace('ord','ob')+'-'+val;
+  var badge=document.getElementById(bid);
+  if(badge) badge.textContent=pos;
+  state.push(val);
+
+  if(state.length===total){
+    G.total++;
+    var allOk=true;
+    state.forEach(function(v,i){
+      var b=document.getElementById(bankId.replace('ord','ob')+'-'+v);
+      if(!b) return;
+      if(v===i+1){ b.className='ord-badge ok'; }
+      else { b.className='ord-badge bad'; allOk=false; }
+    });
+    if(allOk){ G.score++; showFB(fbId,'ok','✅ Excellent ! Ordre parfaitement correct !'); }
+    else { showFB(fbId,'bad','❌ L\'ordre n\'est pas tout à fait juste. Vert = correct, rouge = à revoir.'); }
+    setTimeout(function(){
+      var nxt=document.getElementById(nextId);
+      if(nxt){ nxt.style.display='block'; nxt.scrollIntoView({behavior:'smooth',block:'nearest'}); }
+    },1600);
+  }
+}
+
+// ========= COMPARATIF (BUG FIXÉ) =========
+// On stocke le total au moment où la salle est initialisée
+var COMPAR_TOTAL = 8; // fixe : 8 items dans #cbank
+
+function selCompar(el){
+  if(el.classList.contains('used')) return;
+  document.querySelectorAll('#cbank .citem:not(.used)').forEach(function(c){c.classList.remove('sel');});
+  el.classList.toggle('sel');
+  G.comparSel = el.classList.contains('sel') ? el : null;
+  document.querySelectorAll('.compar-cat').forEach(function(c){
+    c.classList.toggle('active-cat', G.comparSel!==null);
+  });
+}
+
+function assignCompar(cat){
+  if(!G.comparSel) return;
+  var correct = G.comparSel.dataset.cat === cat;
+  G.total++;
+  var div=document.createElement('div');
+  div.className='citem citem-placed '+(correct?'ok':'bad');
+  div.textContent=G.comparSel.textContent;
+  document.getElementById('zone-'+cat).appendChild(div);
+  G.comparSel.classList.add('used');
+  G.comparSel.classList.remove('sel');
+  if(correct) G.score++;
+  G.comparSel=null;
+  document.querySelectorAll('.compar-cat').forEach(function(c){c.classList.remove('active-cat');});
+  G.comparDoneCount++;
+
+  if(G.comparDoneCount===COMPAR_TOTAL){
+    showFB('fb7','ok','✅ Terminé ! Vert = correct · Rouge = à retenir.');
+    onRoomComplete(7);
+    setTimeout(function(){goHub();},2000);
+  }
+}
+
+// ========= RESTART =========
+function restart(){
+  G={score:0,total:0,done:{},assocSel:{A:null,B:null},assocCount:{},ordState:{},comparSel:null,comparDoneCount:0,comparTotal:8,curRoom:0};
+  // Reset UI
+  document.querySelectorAll('.cho').forEach(function(b){b.className='cho';b.disabled=false;});
+  document.querySelectorAll('.ai').forEach(function(a){a.className='ai';});
+  document.querySelectorAll('.fb').forEach(function(f){f.className='fb';f.innerHTML='';});
+  document.querySelectorAll('.hbox').forEach(function(h){h.classList.remove('show');});
+  document.querySelectorAll('[id$="-w"]').forEach(function(w){w.style.display='none';});
+  document.querySelectorAll('[id$="-end"]').forEach(function(e){e.style.display='none';});
+  document.querySelectorAll('.ord-item').forEach(function(o){o.classList.remove('picked');});
+  document.querySelectorAll('.ord-badge').forEach(function(b){b.textContent='?';b.className='ord-badge';});
+  // Reset comparatif
+  G.comparDoneCount=0;
+  var zr=document.getElementById('zone-R'), zn=document.getElementById('zone-N');
+  if(zr) zr.innerHTML=''; if(zn) zn.innerHTML='';
+  document.querySelectorAll('#cbank .citem').forEach(function(c){c.classList.remove('sel','used');});
+  document.querySelectorAll('.compar-cat').forEach(function(c){c.classList.remove('active-cat');});
+  fadeTo('sc-intro');
+}
+
+// ========= INIT HUB VISIBLE POUR INTRO =========
+// Construire le hub au chargement (invisible)
+window.onload=function(){ buildHub(); };
+</script>
+</body>
+</html>
