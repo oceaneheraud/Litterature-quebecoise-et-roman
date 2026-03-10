@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Littérature Québécoise et Roman</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: linear-gradient(135deg, #1a0f05 0%, #2a1f10 100%);
+      font-family: 'Playfair Display', Georgia, serif;
+      color: #e8d5a3;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container {
+      text-align: center;
+      max-width: 800px;
+    }
+    h1 {
+      font-size: 3.5rem;
+      margin-bottom: 20px;
+      text-shadow: 0 4px 20px rgba(0,0,0,.5);
+    }
+    .subtitle {
+      font-size: 1.3rem;
+      margin-bottom: 40px;
+      opacity: 0.9;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      margin-top: 50px;
+    }
+    .card {
+      background: rgba(255,255,255,.08);
+      border: 2px solid rgba(201,168,76,.3);
+      border-radius: 8px;
+      padding: 40px 30px;
+      transition: all 0.3s;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+    }
+    .card:hover {
+      background: rgba(201,168,76,.12);
+      border-color: rgba(201,168,76,.7);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 40px rgba(201,168,76,.2);
+    }
+    .card-icon {
+      font-size: 4rem;
+      margin-bottom: 20px;
+    }
+    .card-title {
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+      color: #e8c56a;
+    }
+    .card-desc {
+      font-family: 'Crimson Text', serif;
+      font-size: 1rem;
+      line-height: 1.6;
+      opacity: 0.85;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📚 Littérature Québécoise</h1>
+    <p class="subtitle">Deux ateliers interactifs pour explorer le roman québécois</p>
+    
+    <div class="cards">
+      <a href="escape-litterature-quebecoise-complet-6.html" class="card">
+        <div class="card-icon">🔓</div>
+        <div class="card-title">L'Évasion des Lettres</div>
+        <div class="card-desc">Jeu d'évasion · 14 salles · ~40 questions sur le roman et la littérature québécoise</div>
+      </a>
+      
+      <a href="atelier-du-romancier.html" class="card">
+        <div class="card-icon">✍️</div>
+        <div class="card-title">L'Atelier du Romancier</div>
+        <div class="card-desc">Créez votre roman en 7 étapes · Générez une fiche d'auteur personnalisée</div>
+      </a>
+    </div>
+  </div>
+</body>
+</html>
